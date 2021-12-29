@@ -55,7 +55,7 @@ For Each ws In Worksheets
         
             Ticker = ws.Cells(i, 1).Value
             Total_Volume = Total_Volume + ws.Cells(i, 7).Value
-            Yearly_Change = Cells(i, 6) - Stock_Open
+            Yearly_Change = ws.Cells(i, 6) - Stock_Open
             
             'Account for division by 0
                 If Stock_Open = 0 Then
@@ -108,7 +108,7 @@ For Each ws In Worksheets
  
  For j = 3 To lastrow
  
-    If Max_Volume < Cells(j, 12).Value Then
+    If Max_Volume < ws.Cells(j, 12).Value Then
        Max_Volume = ws.Cells(j, 12).Value
        Max_Ticker = ws.Cells(j, 9).Value
        
