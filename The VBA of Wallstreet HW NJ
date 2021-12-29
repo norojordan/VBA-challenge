@@ -34,11 +34,11 @@ For Each ws In Worksheets
     ws.Cells(1, 11).Value = "Percent Change"
     ws.Cells(1, 12).Value = "Total Stock Volume"
     'Bonus
-    Cells(1, 16).Value = "Ticker"
-    Cells(1, 17).Value = "Value"
-    Cells(2, 15).Value = "Greatest % Increase"
-    Cells(3, 15).Value = "Greatest % Decrease"
-    Cells(4, 15).Value = "Greatest Total Volume"
+    ws.Cells(1, 16).Value = "Ticker"
+    ws.Cells(1, 17).Value = "Value"
+    ws.Cells(2, 15).Value = "Greatest % Increase"
+    ws.Cells(3, 15).Value = "Greatest % Decrease"
+    ws.Cells(4, 15).Value = "Greatest Total Volume"
     
     
     'Loop through all the stocks for one year
