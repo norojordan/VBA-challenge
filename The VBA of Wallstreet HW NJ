@@ -1,0 +1,131 @@
+Sub Stockmarket()
+
+'Loop through all sheets
+
+For Each ws In Worksheets
+
+    'Identify the variables
+
+    Dim Ticker As String
+    Dim Stock_Open As Double
+    Dim Yearly_Change As Double
+    Dim Percent_Change As Double
+    Dim Total_Volume As LongLong
+    Dim Summary_Table_Row As Integer
+    
+    'Initialize the variables
+    Total_Volume = 0
+    Percent_Change = 0
+    Yearly_Change = 0
+    Summary_Table_Row = 2
+    lastrow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+    
+    
+    Stock_Open = ws.Cells(2, 3).Value
+    
+    'Adjust column widths
+    Columns("O").ColumnWidth = 20
+    
+   
+    
+    'Title the Output columns
+    ws.Cells(1, 9).Value = "Ticker"
+    ws.Cells(1, 10).Value = "Yearly Change"
+    ws.Cells(1, 11).Value = "Percent Change"
+    ws.Cells(1, 12).Value = "Total Stock Volume"
+    'Bonus
+    Cells(1, 16).Value = "Ticker"
+    Cells(1, 17).Value = "Value"
+    Cells(2, 15).Value = "Greatest % Increase"
+    Cells(3, 15).Value = "Greatest % Decrease"
+    Cells(4, 15).Value = "Greatest Total Volume"
+    
+    
+    'Loop through all the stocks for one year
+
+    For i = 2 To lastrow
+    
+    
+    'Inner loop looks at all the data for the current ticker symbol
+    'Check to see if we are still within the same stock. When the stocks change, calculate the difference between the opening cost on the first day from the closing cost on the
+    'last day F263 - C2 for the A stock and then the percent change from beginning of year to end of year
+     
+    
+        If ws.Cells(i, 1).Value <> ws.Cells(i + 1, 1).Value Then
+        
+            Ticker = ws.Cells(i, 1).Value
+            Total_Volume = Total_Volume + ws.Cells(i, 7).Value
+            Yearly_Change = Cells(i, 6) - Stock_Open
+            
+            'Account for division by 0
+                If Stock_Open = 0 Then
+                      Percent_Change = 0
+                Else
+                       Percent_Change = (Yearly_Change / Stock_Open)
+                End If
+     
+    'Print the Ticker name, yearly change, percent change and total volume in the Summary table. Format Percent (look this up)
+        
+        ws.Range("I" & Summary_Table_Row).Value = Ticker
+        ws.Range("J" & Summary_Table_Row).Value = Yearly_Change
+        ws.Range("K" & Summary_Table_Row).Value = Percent_Change
+        ws.Range("K" & Summary_Table_Row).NumberFormat = "0.00%"
+        ws.Range("L" & Summary_Table_Row).Value = Total_Volume
+        ws.Columns("I:L").AutoFit
+       
+      'Also include positive change in green and negative change in red
+      
+            If Yearly_Change < 0 Then
+                ws.Range("J" & Summary_Table_Row).Interior.ColorIndex = 3
+            Else
+                ws.Range("J" & Summary_Table_Row).Interior.ColorIndex = 4
+            End If
+     
+       
+     'Add one to the summary table row to get to the next row for the next stock, reset the start for the next stock and set the total volume back to zero.
+     Summary_Table_Row = Summary_Table_Row + 1
+     Total_Volume = 0
+     Stock_Open = ws.Cells(i + 1, 3).Value
+         
+     
+     'If the stocks are the same, continue adding to get a cumulative volume
+      Else
+             Total_Volume = Total_Volume + ws.Cells(i, 7).Value
+             
+                
+      End If
+         
+            
+           
+    Next i
+    
+    
+    'Bonus - list greatest % increase and decrease and greatest total volume from the summary table
+ 
+  
+ Max_Volume = ws.Cells(2, 12).Value
+ Max_Ticker = ws.Cells(2, 9).Value
+ 
+ For j = 3 To lastrow
+ 
+    If Max_Volume < Cells(j, 12).Value Then
+       Max_Volume = ws.Cells(j, 12).Value
+       Max_Ticker = ws.Cells(j, 9).Value
+       
+    End If
+    
+    
+  Next j
+
+  'Print the results for Max Volume
+  
+   ws.Range("P4").Value = Max_Ticker
+   ws.Range("Q4").Value = Max_Volume
+   ws.Columns("N:P").AutoFit
+   
+
+   Next ws
+    
+    
+  End Sub
+       
